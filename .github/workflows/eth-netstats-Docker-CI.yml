@@ -18,8 +18,9 @@ jobs:
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
     - name: Build the Docker image
+      working-directory: ./docker-images/eth-netstats
       run: | 
-        docker build -f docker-images/eth-netstats/Dockerfile -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/eth-netstats:${{ steps.extract_branch.outputs.branch }} .
+        docker build -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/eth-netstats:${{ steps.extract_branch.outputs.branch }} .
     - name: Push to registry
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}  
