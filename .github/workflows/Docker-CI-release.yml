@@ -21,12 +21,19 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}  
         DOCKER_PW: ${{ secrets.DOCKER_PW }}
       run: |
-        docker login -u $DOCKER_USERNAME -p $DOCKER_PW registry.tech4comp.dbis.rwth-aachen.de  
-        docker build -f docker-images/eth-netstats/Dockerfile -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/eth-netstats:${{ steps.get_tag.outputs.tag }} .
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PW registry.tech4comp.dbis.rwth-aachen.de
+        cd docker-images/eth-netstats
+        docker build -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/eth-netstats:${{ steps.get_tag.outputs.tag }} .
         docker push registry.tech4comp.dbis.rwth-aachen.de/rwthacis/eth-netstats:${{ steps.get_tag.outputs.tag }} 
-        docker build -f docker-images/fast-geth/Dockerfile -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/fast-geth:${{ steps.get_tag.outputs.tag }} .
+        cd ..
+        cd fast-geth
+        docker build -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/fast-geth:${{ steps.get_tag.outputs.tag }} .
         docker push registry.tech4comp.dbis.rwth-aachen.de/rwthacis/fast-geth:${{ steps.get_tag.outputs.tag }}
-        docker build -f docker-images/las2peer/Dockerfile -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.get_tag.outputs.tag }} .
+        cd ..
+        cd las2peer
+        docker build -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.get_tag.outputs.tag }} .
         docker push registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.get_tag.outputs.tag }}
-        docker build -f docker-images/monitored-geth-client/Dockerfile -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/monitored-geth-client:${{ steps.get_tag.outputs.tag }} .
+        cd ..
+        cd monitored-geth-client
+        docker build -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/monitored-geth-client:${{ steps.get_tag.outputs.tag }} .
         docker push registry.tech4comp.dbis.rwth-aachen.de/rwthacis/monitored-geth-client:${{ steps.get_tag.outputs.tag }}
