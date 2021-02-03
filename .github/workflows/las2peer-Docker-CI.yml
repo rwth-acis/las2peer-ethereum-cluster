@@ -19,7 +19,7 @@ jobs:
       id: extract_branch
     - name: Build the Docker image
       run: | 
-        docker build -f docker-images/eth-netstats/Dockerfile -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.extract_branch.outputs.branch }} .
+        docker build -f docker-images/las2peer/Dockerfile -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.extract_branch.outputs.branch }} .
     - name: Push to registry
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}  
