@@ -2,7 +2,11 @@ name: eth-netstats Docker Build and Push
 
 on:
   push:
-    branches: [ master, develop ]
+    branches:
+      - master
+      - develop
+    paths:
+      - docker-images/eth-netstats/**
 
 jobs:
   build:
