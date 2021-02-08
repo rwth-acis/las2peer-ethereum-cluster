@@ -1,11 +1,12 @@
 FROM alpine as builder
 
-RUN apk add --no-cache git go build-base linux-headers
+RUN apk add --no-cache git go build-base linux-headers dos2unix
 
 RUN git clone https://github.com/ethereum/go-ethereum.git
 WORKDIR /go-ethereum
 RUN git checkout v1.8.17
 COPY mygeth.patch /go-ethereum/
+RUN dos2unix mygeth.patch && apk del dos2unix
 RUN git apply mygeth.patch
 RUN make geth
 
