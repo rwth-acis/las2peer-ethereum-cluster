@@ -16,8 +16,10 @@ WORKDIR /app-cache
 # RUN git clone https://github.com/rwth-acis/las2peer/ -b develop
 RUN git clone https://github.com/rwth-acis/las2peer.git -b ba-erdzan
 WORKDIR /app-cache/las2peer
-RUN git checkout tags/v1.1.0
-RUN ant build-only-no-bundle
+# RUN git checkout tags/v1.1.0
+RUN ls
+# RUN ant build-only-no-bundle
+RUN chmod +x gradlew && ./gradlew build --exclude-task test
 
 # LAS2PEER BOOTSTRAP
 FROM openjdk:14-jdk-alpine
@@ -38,7 +40,7 @@ WORKDIR /app
 RUN git clone https://github.com/ettore26/wait-for-command
 
 # use build cache from develop branch
-COPY --from=buildcache --chown=build:build /home/build/.ivy2 /home/build/.ivy2
+# COPY --from=buildcache --chown=build:build /home/build/.ivy2 /home/build/.ivy2
 
 # cache bust, see https://stackoverflow.com/a/39278224
 ADD https://api.github.com/repos/rwth-acis/las2peer-registry-contracts/git/refs/heads/master version.json
@@ -55,7 +57,8 @@ COPY --from=buildcache --chown=build:build /app-cache/las2peer/webconnector/fron
 
 WORKDIR /app/las2peer
 RUN mkdir -p /app/las2peer/restmapper/tmp && mkdir -p /app/las2peer/webconnector/tmp && mkdir -p /app/las2peer/log && mkdir -p /app/las2peer/node-storage
-RUN ant build-only-no-bundle
+# RUN ant build-only-no-bundle
+RUN chmod +x gradlew && ./gradlew build --exclude-task test
 
 WORKDIR /app
 COPY --chown=build:build ./etc /app/las2peer/etc
