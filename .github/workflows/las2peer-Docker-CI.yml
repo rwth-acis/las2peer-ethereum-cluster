@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - develop
+      - ba-erdzan
     paths:
       - docker-images/las2peer/**
 
@@ -12,19 +13,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
-    - name: Build the Docker image
-      working-directory: ./docker-images/las2peer
-      run: | 
-        docker build -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.extract_branch.outputs.branch }} .
-    - name: Push to registry
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}  
-        DOCKER_PW: ${{ secrets.DOCKER_PW }}
-      run: |
-        docker login -u $DOCKER_USERNAME -p $DOCKER_PW registry.tech4comp.dbis.rwth-aachen.de
-        docker push registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.extract_branch.outputs.branch }}
+      - uses: actions/checkout@v2
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - name: Build the Docker image
+        working-directory: ./docker-images/las2peer
+        run: |
+          docker build -t registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.extract_branch.outputs.branch }} .
+      - name: Push to registry
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PW: ${{ secrets.DOCKER_PW }}
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PW registry.tech4comp.dbis.rwth-aachen.de
+          docker push registry.tech4comp.dbis.rwth-aachen.de/rwthacis/las2peer:${{ steps.extract_branch.outputs.branch }}
