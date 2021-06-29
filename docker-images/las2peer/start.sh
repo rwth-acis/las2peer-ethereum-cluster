@@ -37,7 +37,7 @@ function truffleMigrate {
     ./node_modules/.bin/truffle migrate --network docker_boot 2>&1 | tee migration.log
     echo done. Setting contract addresses in config file ...
     # yeah, this isn't fun:
-    cat migration.log | grep -A5 "\(Deploying\|Replacing\|contract address\) \'\(CommunityTagIndex\|UserRegistry\|ServiceRegistry\|ReputationRegistry\)\'" | grep '\(Deploying\|Replacing\|contract address\)' | tr -d " '>:" | sed -e '$!N;s/\n//;s/Deploying//;s/Replacing//;s/contractaddress/Address = /;s/./\l&/' >> "${ETH_PROPS_DIR}${ETH_PROPS}"
+    cat migration.log | grep -A5 "\(Deploying\|Replacing\|contract address\) \'\(CommunityTagIndex\|UserRegistry\|ServiceRegistry\|GroupRegistry\|ReputationRegistry\)\'" | grep '\(Deploying\|Replacing\|contract address\)' | tr -d " '>:" | sed -e '$!N;s/\n//;s/Deploying//;s/Replacing//;s/contractaddress/Address = /;s/./\l&/' >> "${ETH_PROPS_DIR}${ETH_PROPS}"
     cp migration.log /app/las2peer/node-storage/migration.log
     echo done. 
  }
@@ -67,7 +67,7 @@ if [ -s "/app/las2peer/node-storage/migration.log" ]; then
     echo Found old migration.log, importing...
     cat /app/las2peer/node-storage/migration.log
 
-    cat /app/las2peer/node-storage/migration.log | grep -A5 "\(Deploying\|Replacing\|contract address\) \'\(CommunityTagIndex\|UserRegistry\|ServiceRegistry\|ReputationRegistry\)\'" | grep '\(Deploying\|Replacing\|contract address\)' | tr -d " '>:" | sed -e '$!N;s/\n//;s/Deploying//;s/Replacing//;s/contractaddress/Address = /;s/./\l&/' >> "${ETH_PROPS_DIR}${ETH_PROPS}"
+    cat /app/las2peer/node-storage/migration.log | grep -A5 "\(Deploying\|Replacing\|contract address\) \'\(CommunityTagIndex\|UserRegistry\|ServiceRegistry\|GroupRegistry\|ReputationRegistry\)\'" | grep '\(Deploying\|Replacing\|contract address\)' | tr -d " '>:" | sed -e '$!N;s/\n//;s/Deploying//;s/Replacing//;s/contractaddress/Address = /;s/./\l&/' >> "${ETH_PROPS_DIR}${ETH_PROPS}"
 
     echo done.
 fi
