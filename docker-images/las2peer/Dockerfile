@@ -16,7 +16,7 @@ RUN npm install
 WORKDIR /app-cache
 # RUN git clone https://github.com/rwth-acis/las2peer/ -b develop
 # RUN git clone https://github.com/rwth-acis/las2peer.git -b dev-eth-test
-RUN git clone https://github.com/rwth-acis/las2peer.git -b nonce-fix
+RUN git clone https://github.com/rwth-acis/las2peer.git -b issue-70-nonce-out-of-sync
 WORKDIR /app-cache/las2peer
 # RUN git checkout tags/v1.1.0
 RUN ls
@@ -57,9 +57,9 @@ WORKDIR /app
 # cache bust, see https://stackoverflow.com/a/39278224
 ADD https://api.github.com/repos/rwth-acis/las2peer/git/refs/heads/master version.json
 # ADD https://api.github.com/repos/rwth-acis/las2peer/git/refs/heads/dev-eth-test version.json
-ADD https://api.github.com/repos/rwth-acis/las2peer/git/refs/heads/nonce-fix version.json
+ADD https://api.github.com/repos/rwth-acis/las2peer/git/refs/heads/issue-70-nonce-out-of-sync version.json
 # RUN git clone https://github.com/rwth-acis/las2peer.git -b dev-eth-test
-RUN git clone https://github.com/rwth-acis/las2peer.git -b nonce-fix
+RUN git clone https://github.com/rwth-acis/las2peer.git -b issue-70-nonce-out-of-sync
 # COPY --from=buildcache --chown=build:build /app-cache/las2peer/webconnector/frontend/node_modules /app/las2peer/webconnector/frontend/node_modules
 
 WORKDIR /app/las2peer
