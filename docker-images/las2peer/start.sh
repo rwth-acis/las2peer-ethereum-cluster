@@ -27,7 +27,7 @@ function waitForEndpoint {
 
 function host { echo ${1%%:*}; }
 function port { echo ${1#*:}; }
-function truffleMigrate { 
+function truffleMigrate {
     echo Starting truffle migration ...
     echo "just to be sure the Eth client is ready, wait an extra $EXTRA_ETH_WAIT secs ..."
     echo "    (Yes, this is a potential source of problems, maybe increase.)"
@@ -37,10 +37,10 @@ function truffleMigrate {
     ./node_modules/.bin/truffle migrate --network docker_boot 2>&1 | tee migration.log
     echo done. Setting contract addresses in config file ...
     # yeah, this isn't fun:
-    cat migration.log | grep -A5 "\(Deploying\|Replacing\|contract address\) \'\(CommunityTagIndex\|UserRegistry\|ServiceRegistry\|ReputationRegistry\)\'" | grep '\(Deploying\|Replacing\|contract address\)' | tr -d " '>:" | sed -e '$!N;s/\n//;s/Deploying//;s/Replacing//;s/contractaddress/Address = /;s/./\l&/' >> "${ETH_PROPS_DIR}${ETH_PROPS}"
+    cat migration.log | grep -A5 "\(Deploying\|Replacing\|contract address\) \'\(CommunityTagIndex\|UserRegistry\|ServiceRegistry\|GroupRegistry\|ReputationRegistry\)\'" | grep '\(Deploying\|Replacing\|contract address\)' | tr -d " '>:" | sed -e '$!N;s/\n//;s/Deploying//;s/Replacing//;s/contractaddress/Address = /;s/./\l&/' >> "${ETH_PROPS_DIR}${ETH_PROPS}"
     cp migration.log /app/las2peer/node-storage/migration.log
-    echo done. 
- }
+    echo done.
+}
 
 if [ -n "$LAS2PEER_CONFIG_ENDPOINT" ]; then
     echo Attempting to autoconfigure registry blockchain parameters ...
@@ -66,9 +66,9 @@ fi
 if [ -s "/app/las2peer/node-storage/migration.log" ]; then
     echo Found old migration.log, importing...
     cat /app/las2peer/node-storage/migration.log
-
-    cat /app/las2peer/node-storage/migration.log | grep -A5 "\(Deploying\|Replacing\|contract address\) \'\(CommunityTagIndex\|UserRegistry\|ServiceRegistry\|ReputationRegistry\)\'" | grep '\(Deploying\|Replacing\|contract address\)' | tr -d " '>:" | sed -e '$!N;s/\n//;s/Deploying//;s/Replacing//;s/contractaddress/Address = /;s/./\l&/' >> "${ETH_PROPS_DIR}${ETH_PROPS}"
-
+    
+    cat /app/las2peer/node-storage/migration.log | grep -A5 "\(Deploying\|Replacing\|contract address\) \'\(CommunityTagIndex\|UserRegistry\|ServiceRegistry\|GroupRegistry\|ReputationRegistry\)\'" | grep '\(Deploying\|Replacing\|contract address\)' | tr -d " '>:" | sed -e '$!N;s/\n//;s/Deploying//;s/Replacing//;s/contractaddress/Address = /;s/./\l&/' >> "${ETH_PROPS_DIR}${ETH_PROPS}"
+    
     echo done.
 fi
 
@@ -78,7 +78,7 @@ else
     if [ -n "$LAS2PEER_ETH_HOST" ]; then
         echo Waiting for Ethereum client at $(host $LAS2PEER_ETH_HOST):$(port $LAS2PEER_ETH_HOST)...
         if waitForEndpoint $(host $LAS2PEER_ETH_HOST) $(port $LAS2PEER_ETH_HOST) 300; then
-            echo Found Eth client. 
+            echo Found Eth client.
             if [ -s "/app/las2peer/node-storage/migration.log" ]; then
                 echo Migrated from logs.
             else
@@ -112,7 +112,7 @@ fi
 function selectMnemonic {
     declare -a mnemonics=("differ employ cook sport clinic wedding melody column pave stuff oak price" "memory wrist half aunt shrug elbow upper anxiety maximum valve finish stay" "alert sword real code safe divorce firm detect donate cupboard forward other" "pair stem change april else stage resource accident will divert voyage lawn" "lamp elbow happy never cake very weird mix episode either chimney episode" "cool pioneer toe kiwi decline receive stamp write boy border check retire" "obvious lady prize shrimp taste position abstract promote market wink silver proof" "tired office manage bird scheme gorilla siren food abandon mansion field caution" "resemble cattle regret priority hen six century hungry rice grape patch family" "access crazy can job volume utility dial position shaft stadium soccer seven")
     if [[ ${WALLET} =~ ^[0-9]+$ && ${WALLET} -lt ${#mnemonics[@]} ]]; then
-    # get N-th mnemonic
+        # get N-th mnemonic
         echo "${mnemonics[${WALLET}]}"
     else
         # note: zsh and others use 1-based indexing. this requires bash
@@ -125,29 +125,29 @@ echo external_address = $(curl -s https://ipinfo.io/ip):${LAS2PEER_PORT} > etc/p
 
 echo Starting las2peer node ...
 if [ -n "$LAS2PEER_ETH_HOST" ]; then
-    echo ... using ethereum boot procedure: 
+    echo ... using ethereum boot procedure:
     java $(echo $ADDITIONAL_JAVA_ARGS) \
-        -cp "core/src/main/resources/:core/export/jars/*:restmapper/export/jars/*:webconnector/export/jars/*:core/lib/*:restmapper/lib/*:webconnector/lib/*" i5.las2peer.tools.L2pNodeLauncher \
-        --service-directory service \
-        --port $LAS2PEER_PORT \
-        $([ -n "$LAS2PEER_BOOTSTRAP" ] && echo "--bootstrap $LAS2PEER_BOOTSTRAP") \
-        --node-id-seed $NODE_ID_SEED \
-        --ethereum-mnemonic "$(selectMnemonic)" \
-        $(echo $ADDITIONAL_LAUNCHER_ARGS) \
-        startWebConnector \
-        "node=getNodeAsEthereumNode()" "registry=node.getRegistryClient()" "n=getNodeAsEthereumNode()" "r=n.getRegistryClient()" \
-        $(echo $ADDITIONAL_PROMPT_CMDS) \
-        interactive
+    -cp "core/src/main/resources/:core/export/jars/*:restmapper/export/jars/*:webconnector/export/jars/*:core/lib/*:restmapper/lib/*:webconnector/lib/*" i5.las2peer.tools.L2pNodeLauncher \
+    --service-directory service \
+    --port $LAS2PEER_PORT \
+    $([ -n "$LAS2PEER_BOOTSTRAP" ] && echo "--bootstrap $LAS2PEER_BOOTSTRAP") \
+    --node-id-seed $NODE_ID_SEED \
+    --ethereum-mnemonic "$(selectMnemonic)" \
+    $(echo $ADDITIONAL_LAUNCHER_ARGS) \
+    startWebConnector \
+    "node=getNodeAsEthereumNode()" "registry=node.getRegistryClient()" "n=getNodeAsEthereumNode()" "r=n.getRegistryClient()" \
+    $(echo $ADDITIONAL_PROMPT_CMDS) \
+    interactive
 else
     echo ... using non-ethereum boot procedure:
     java $(echo $ADDITIONAL_JAVA_ARGS) \
-        -cp "core/src/main/resources/:core/export/jars/*:restmapper/export/jars/*:webconnector/export/jars/*:core/lib/*:restmapper/lib/*:webconnector/lib/*" i5.las2peer.tools.L2pNodeLauncher \
-        --service-directory service \
-        --port $LAS2PEER_PORT \
-        $([ -n "$LAS2PEER_BOOTSTRAP" ] && echo "--bootstrap $LAS2PEER_BOOTSTRAP") \
-        --node-id-seed $NODE_ID_SEED \
-        $(echo $ADDITIONAL_LAUNCHER_ARGS) \
-        startWebConnector \
-        $(echo $ADDITIONAL_PROMPT_CMDS) \
-        interactive
+    -cp "core/src/main/resources/:core/export/jars/*:restmapper/export/jars/*:webconnector/export/jars/*:core/lib/*:restmapper/lib/*:webconnector/lib/*" i5.las2peer.tools.L2pNodeLauncher \
+    --service-directory service \
+    --port $LAS2PEER_PORT \
+    $([ -n "$LAS2PEER_BOOTSTRAP" ] && echo "--bootstrap $LAS2PEER_BOOTSTRAP") \
+    --node-id-seed $NODE_ID_SEED \
+    $(echo $ADDITIONAL_LAUNCHER_ARGS) \
+    startWebConnector \
+    $(echo $ADDITIONAL_PROMPT_CMDS) \
+    interactive
 fi
