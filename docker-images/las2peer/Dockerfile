@@ -12,9 +12,8 @@ RUN git checkout tags/v1.0.1
 RUN npm install
 WORKDIR /app-cache
 # RUN git clone https://github.com/rwth-acis/las2peer/ -b develop
-RUN git clone https://github.com/rwth-acis/las2peer/
+RUN git clone https://github.com/rwth-acis/las2peer/ -b nonce-dev
 WORKDIR /app-cache/las2peer
-RUN git checkout tags/v1.1.2
 # RUN chmod +x gradlew && ./gradlew build --exclude-task test
 
 # LAS2PEER BOOTSTRAP
@@ -49,11 +48,10 @@ RUN npm install
 WORKDIR /app
 # cache bust, see https://stackoverflow.com/a/39278224
 ADD https://api.github.com/repos/rwth-acis/las2peer/git/refs/heads/master version.json
-RUN git clone https://github.com/rwth-acis/las2peer.git
+RUN git clone https://github.com/rwth-acis/las2peer.git -b nonce-dev
 # COPY --from=buildcache --chown=build:build /app-cache/las2peer/webconnector/frontend/node_modules /app/las2peer/webconnector/frontend/node_modules
 
 WORKDIR /app/las2peer
-RUN git checkout tags/v1.1.2
 RUN mkdir -p /app/las2peer/restmapper/tmp && mkdir -p /app/las2peer/webconnector/tmp && mkdir -p /app/las2peer/log && mkdir -p /app/las2peer/node-storage
 # RUN ant build-only-no-bundle
 RUN chmod +x gradlew && ./gradlew build --exclude-task test
