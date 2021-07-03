@@ -55,13 +55,13 @@ if [ -n "$LAS2PEER_CONFIG_ENDPOINT" ]; then
     fi
 fi
 
-# if [ -n "$LAS2PEER_ETH_HOST" ]; then
-#     echo Replacing Ethereum client host in config files ...
-#     ETH_HOST_SUB=$(host $LAS2PEER_ETH_HOST)
-#     sed -i "s|^endpoint.*$|endpoint = http://${LAS2PEER_ETH_HOST}|" "${ETH_PROPS_DIR}${ETH_PROPS}"
-#     sed -i "s/eth-bootstrap/${ETH_HOST_SUB}/" /app/las2peer-registry-contracts/truffle.js
-#     echo done.
-# fi
+if [ -n "$LAS2PEER_ETH_HOST" ]; then
+    echo Replacing Ethereum client host in config files ...
+    ETH_HOST_SUB=$(host $LAS2PEER_ETH_HOST)
+    sed -i "s|^endpoint.*$|endpoint = http://${LAS2PEER_ETH_HOST}|" "${ETH_PROPS_DIR}${ETH_PROPS}"
+    sed -i "s/eth-bootstrap/${ETH_HOST_SUB}/" /app/las2peer-registry-contracts/truffle.js
+    echo done.
+fi
 
 if [ -s "/app/las2peer/node-storage/migration.log" ]; then
     echo Found old migration.log, importing...
