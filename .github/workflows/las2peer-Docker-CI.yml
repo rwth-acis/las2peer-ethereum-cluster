@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - develop
-      - ba-erdzan
+      - nonce
     paths:
       - docker-images/las2peer/**
 
