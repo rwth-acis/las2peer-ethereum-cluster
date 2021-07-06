@@ -63,6 +63,7 @@ if [ -n "$LAS2PEER_ETH_HOST" ]; then
     echo done.
 fi
 
+
 if [ -s "/app/las2peer/node-storage/migration.log" ]; then
     echo Found old migration.log, importing...
     cat /app/las2peer/node-storage/migration.log
