@@ -6,7 +6,7 @@ set -e
 # when migrating (deploying smart contracts, done by boot node),
 # after eth client is seemingly ready, wait for this many extra seconds
 # (because e.g. account unlocking takes time)
-EXTRA_ETH_WAIT=${EXTRA_ETH_WAIT:-30}
+EXTRA_ETH_WAIT=${EXTRA_ETH_WAIT:-1}
 
 # max wait for bootstrapping node to perform migration and share its config
 # with trivial block time, this takes just a few seconds; with higher block
